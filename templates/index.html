@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>多模型情感分析</title>
+
+    <link rel="stylesheet" href="../static/css/bootstrap.min.css">
+
+	<script src="../static/js/jquery.min.js"></script>
+	<script src="../static/js/bootstrap.min.js"></script>
+    <script src="../static/js/pttr.js"></script>
+
+</head>
+
+<body>
+
+
+    <script>
+
+        serverP = "http://localhost:5000";
+
+        function postS(jsonData, url, successFunction){
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    contentType : "application/json; charset=utf-8",
+                    data:JSON.stringify(jsonData),
+                    dataType: "text",
+                    success: successFunction,
+                    error: function (e) {
+                        console.info(e)
+                    }
+                })
+            }
+
+        function score(modelType) {
+
+            function setScore(e) {
+                const eleName = modelType + '-score-text';
+                document.getElementById(eleName).innerHTML = e;
+            }
+
+            const eleName = modelType + '-text-in';
+            const modelParameter = {
+                "model": modelType,
+                "text": document.getElementById(eleName).innerHTML,
+            };
+            console.info(modelParameter);
+            postS(
+                modelParameter,
+                serverP + '/api/v1/predict',
+                setScore
+            );
+        }
+
+    </script>
+
+
+    <div class="container">
+
+        <div class="row clearfix">
+            <div class="col-md-12 column">
+                <div class="page-header">
+                    <h1>
+                        多模型情感分析
+                    </h1>
+                </div>
+            </div>
+        </div>
+
+        <div class="row clearfix">
+            <div class="col-md-2 column"></div>
+
+            <div class="col-md-8 column">
+
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            RNN-LSTM
+                        </h3>
+                    </div>
+                    <div class="panel-body">
+
+                        <label for="lstm-text-in">请输入文本：</label>
+                        <textarea id="lstm-text-in" class="form-control" rows="3"></textarea>
+
+                        <br/>
+
+                        <label for="lstm-score">分数：</label>
+
+                        <div id="lstm-score">
+                            <p id="lstm-score-text"></p>
+                        </div>
+
+                    </div>
+                    <div class="panel-footer">
+
+                        <div class="row clearfix">
+
+                            <div class="col-md-10 column">
+
+                            </div>
+
+                            <div class="col-md-2 column">
+                                <button type="button" class="btn btn-primary btn-default" onclick="score('lstm')">评价</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            RNN-GRU
+                        </h3>
+                    </div>
+                    <div class="panel-body">
+
+                        <label for="gru-text-in">请输入文本：</label>
+                        <textarea id="gru-text-in" class="form-control" rows="3"></textarea>
+
+                        <br/>
+
+                        <label for="gru-score">分数：</label>
+
+                        <div id="gru-score">
+                            <p id="gru-score-text"></p>
+                        </div>
+
+                    </div>
+                    <div class="panel-footer">
+
+                        <div class="row clearfix">
+
+                            <div class="col-md-10 column">
+
+                            </div>
+
+                            <div class="col-md-2 column">
+                                <button type="button" class="btn btn-primary btn-default" onclick="score('gru')">评价</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            RNN-CNN
+                        </h3>
+                    </div>
+                    <div class="panel-body">
+
+                        <label for="cnn-text-in">请输入文本：</label>
+                        <textarea id="cnn-text-in" class="form-control" rows="3"></textarea>
+
+                        <br/>
+
+                        <label for="cnn-score">分数：</label>
+
+                        <div id="cnn-score">
+                            <p id="cnn-score-text"></p>
+                        </div>
+
+                    </div>
+                    <div class="panel-footer">
+
+                        <div class="row clearfix">
+
+                            <div class="col-md-10 column">
+
+                            </div>
+
+                            <div class="col-md-2 column">
+                                <button type="button" class="btn btn-primary btn-default" onclick="score('cnn')">评价</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel panel-warning">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            RNN-MULTI
+                        </h3>
+                    </div>
+                    <div class="panel-body">
+
+                        <label for="multi-text-in">请输入文本：</label>
+                        <textarea id="multi-text-in" class="form-control" rows="3"></textarea>
+
+                        <br/>
+
+                        <label for="multi-score">分数：</label>
+
+                        <div id="multi-score">
+                            <p id="multi-score-text"></p>
+                        </div>
+
+                    </div>
+                    <div class="panel-footer">
+
+                        <div class="row clearfix">
+
+                            <div class="col-md-10 column">
+
+                            </div>
+
+                            <div class="col-md-2 column">
+                                <button type="button" class="btn btn-primary btn-default" onclick="score('multi')">评价</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <div class="col-md-2 column"></div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>
