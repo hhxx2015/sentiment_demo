@@ -12,11 +12,10 @@ blue = Blueprint('first', __name__, static_folder='../static', template_folder='
 
 CORS(blue, supports_credentials=True)
 
-multi_model_path = r"multi_model.hdf5"
+multi_model_path = r"multi_model429.hdf5"
 lstm_model_path = r"bilstm_model.hdf5"
 gru_model_path = r"bigru_model.hdf5"
 cnn_model_path = r"cnn_model.hdf5"
-
 
 model_check_dict = {
     "multi": ModelPredict(model_dir + multi_model_path, toka_path),
@@ -34,6 +33,13 @@ def index():
 
 @blue.route('/api/v1/predict', methods=['POST'])
 def predict():
+    pre_dict = {
+        0: "negative",
+        1: "somewhat negative",
+        2: "neutral",
+        3: "somewhat positive",
+        4: "positive",
+    }
 
     json_data = request.get_json()
 
@@ -42,10 +48,6 @@ def predict():
 
     pres = predter.pad_predict_sentiment(text_list)
     print(pres)
-    predictions = np.round(np.argmax(pres, axis=1)).astype(int)
+    predictions = np.round(np.argmax(pres, axis=1)).astype(int)[0]
     # pres = str()
-    return str(predictions)
-
-
-
-
+    return pre_dict[predictions]

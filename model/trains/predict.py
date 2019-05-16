@@ -8,10 +8,10 @@ from app.predict import ModelPredict
 
 
 def test_class_m():
-    model_path = r"C:\code\python3workspace\sentiment_demo\data\model\pres\cpu\bilstm_model.hdf5"
+    model_path = r"C:\code\python3workspace\sentiment_demo\data\model\pres\gpu\bilstm_model.hdf5"
     tk_path = r"C:\code\python3workspace\sentiment_demo\data\model\toka.bin"
     mp = ModelPredict(model_path, tk_path)
-    pre = mp.pad_predict_sentiment(["happy"], 50)
+    pre = mp.pad_predict_sentiment(["unhappy"], 50)
     print(pre)
 
 
@@ -19,7 +19,7 @@ def test_model():
     texts = ["happy", "very happy", "sad", "unhappy"]
     max_len = 50
     tk_path = r"C:\code\python3workspace\sentiment_demo\data\model\toka.bin"
-    model_path = r"C:\code\python3workspace\sentiment_demo\data\model\pres\cpu\bilstm_model.hdf5"
+    model_path = r"C:\code\python3workspace\sentiment_demo\data\model\pres\gpu\multi_model429.hdf5"
     tk = pickle.load(open(tk_path, 'rb'))
     model = load_model(filepath=model_path)
     test_tokenized = tk.texts_to_sequences(texts)
@@ -30,5 +30,5 @@ def test_model():
 
 
 if __name__ == '__main__':
-    # test_model()
-    test_class_m()
+    test_model()
+    # test_class_m()

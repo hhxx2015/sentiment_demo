@@ -27,7 +27,7 @@ if __name__ == '__main__':
     texts = ["happy", "very happy", "sad", "unhappy"]
     max_len = 50
     tk_path = r"C:\code\python3workspace\sentiment_demo\data\model\toka.bin"
-    model_path = r"C:\code\python3workspace\sentiment_demo\data\model\pres\cpu\bigru_model.hdf5"
+    model_path = r"C:\code\python3workspace\sentiment_demo\data\model\pres\gpu\multi_model429.hdf5"
     tk = pickle.load(open(tk_path, 'rb'))
     model = load_model(filepath=model_path)
     test_tokenized = tk.texts_to_sequences(texts)

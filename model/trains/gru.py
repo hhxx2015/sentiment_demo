@@ -109,7 +109,7 @@ def build_model(lr=0.0, lr_d=0.0, units=0, dr=0.0):
     x = Dense(5, activation="sigmoid")(x)
     model = Model(inputs=inp, outputs=x)
     model.compile(loss="binary_crossentropy", optimizer=Adam(lr=lr, decay=lr_d), metrics=["accuracy"])
-    model.fit(X_train, y_ohe, batch_size=16, epochs=1, validation_split=0.1, verbose=1,
+    model.fit(X_train, y_ohe, batch_size=32, epochs=20, validation_split=0.1, verbose=1,
               callbacks=[check_point, early_stop, tb_cb])
     model = load_model(model_path)
     return model

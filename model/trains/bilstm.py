@@ -23,7 +23,7 @@ log_filepath = r"C:\code\python3workspace\sentiment_demo\model\log"
 
 toka_path = r"C:\code\python3workspace\sentiment_demo\data\model\toka.bin"
 
-model_path = r"C:\code\python3workspace\sentiment_demo\data\model\pres\cpu\multi_model.hdf5"
+model_path = r"C:\code\python3workspace\sentiment_demo\data\model\pres\gpu\multi_model429.hdf5"
 
 train = pd.read_csv(root_path + r'\train.tsv', sep="\t")
 test = pd.read_csv(root_path + r'\test.tsv', sep="\t")
@@ -96,7 +96,8 @@ def build_model(lr=0.0, lr_d=0.0, units=0, dr=0.0):
     x = Embedding(19479, embed_size, weights=[embedding_matrix], trainable=False)(inp)
     x1 = SpatialDropout1D(dr)(x)
 
-    x_gru = Bidirectional(CuDNNGRU(units, return_sequences=True))(x1)
+    # x_gru = Bidirectional(CuDNNGRU(units, return_sequences=True))(x1)
+    x_gru = Bidirectional(GRU(units, return_sequences=True))(x1)
     x1 = Conv1D(32, kernel_size=3, padding='valid', kernel_initializer='he_uniform')(x_gru)
     avg_pool1_gru = GlobalAveragePooling1D()(x1)
     max_pool1_gru = GlobalMaxPooling1D()(x1)
@@ -105,7 +106,8 @@ def build_model(lr=0.0, lr_d=0.0, units=0, dr=0.0):
     avg_pool3_gru = GlobalAveragePooling1D()(x3)
     max_pool3_gru = GlobalMaxPooling1D()(x3)
 
-    x_lstm = Bidirectional(CuDNNLSTM(units, return_sequences=True))(x1)
+    # x_lstm = Bidirectional(CuDNNLSTM(units, return_sequences=True))(x1)
+    x_lstm = Bidirectional(LSTM(units, return_sequences=True))(x1)
     x1 = Conv1D(32, kernel_size=3, padding='valid', kernel_initializer='he_uniform')(x_lstm)
     avg_pool1_lstm = GlobalAveragePooling1D()(x1)
     max_pool1_lstm = GlobalMaxPooling1D()(x1)
@@ -123,7 +125,7 @@ def build_model(lr=0.0, lr_d=0.0, units=0, dr=0.0):
     x = Dense(5, activation="sigmoid")(x)
     model = Model(inputs=inp, outputs=x)
     model.compile(loss="binary_crossentropy", optimizer=Adam(lr=lr, decay=lr_d), metrics=["accuracy"])
-    model.fit(X_train, y_ohe, batch_size=16, epochs=1, validation_split=0.1, verbose=1, callbacks=[check_point, early_stop, tb_cb])
+    model.fit(X_train, y_ohe, batch_size=32, epochs=10, validation_split=0.1, verbose=1, callbacks=[check_point, early_stop, tb_cb])
     model = load_model(model_path)
     return model
 
